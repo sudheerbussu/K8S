@@ -1,0 +1,108 @@
+
+
+Ex 2:
+---------
+vim pod-definition2.yml
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: postgres-pod
+ labels:
+  author: sunil
+  type: database
+spec:
+ containers:
+  - name: mypostgres
+    image: postgres
+    env:
+     - name: POSTGRES_PASSWORD
+       value: durgasoft
+     - name: POSTGRES_USER
+       value: myuser
+     - name: POSTGRES_DB
+       value: mydb
+
+:wq
+
+      
+Command to run the definition file
+------------------------------------------
+kubectl create -f pod-definition2.yml
+
+
+To get the list of pods
+---------------------------
+kubectl get pods
+
+
+To get the list of pods along with IP address  and which node the pod is running
+---------------------------
+kubectl get pods -o wide
+
+
+TO get more details about the pod
+-----------------------------------------
+kubectl describe pods  postgres-pod
+
+or
+
+kubectl describe pods  postgres-pod | less
+
+
+Ex3:  
+
+vim pod-definition3.yml
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: jenkins-pod
+ labels:
+  author: sunil
+  ci: cd
+spec:
+ containers:
+  - name: myjenkins
+    image: jenkins
+    ports:
+     - containerPort: 8080
+       hostPort: 8080
+
+:wq
+
+
+
+
+How to open the port?
+-----------------------------
+gcloud compute firewall-rules create rule1 --allow tcp:8080 
+
+
+gcloud compute firewall-rules create rule2 --allow tcp:9090
+
+
+kubectl create -f pod-definition3.yml
+
+kubectl get pods -o wide
+
+Take a note on the node in which the pod is running.
+
+
+gke-cluster-1-default-pool-43cadf7d-7pb3
+
+
+
+TO get the list of nodes
+-----------------------
+kubectl get nodes -o wide
+
+Take the external IP of the node
+
+35.223.183.189:8080
+
+Open browser  ( chrome)
+
+35.223.183.189:8080   ( we should get the jenkins page )
