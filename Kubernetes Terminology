@@ -1,0 +1,256 @@
+Kubernetes Terminology
+------------------------
+
+In docker Manager machine takes the load.
+
+In Kubernetes Manager is called as Master.
+
+Kubernetes master does not take up the load. 
+
+It only distributes load to slaves/ nodes.
+
+Nodes are also called Minion.
+Minions combined together is called as cluster.
+
+Smallest Object that kubernetes can create is pod.
+Within the pod, we have the container.
+
+Kubernetes commands are always triggered using kubectl.
+
+Kuberneted introduced on June 2014 by Google.
+
+To practice Kubernetes on AWS , we have a service EKS ( Elastic Kubernetes Service )
+To practice Kubernetes on Azure , we have a service AKS ( Azure Kubernetes Service )
+To practice Kubernetes on GCP , we have a service GKE ( google Kubernetes engine )
+
+AWS, is expensive
+Freeways to work on kubernetes is katakoda
+Goto https://www.katacoda.com/  
+Learn --- --- Kubernetes Introduction -- Start Course
+-- Launch Multinode cluster  -- Start Scenario
+
+Login using gmail
+
+Step 1: Initialise Master
+Run kubeadm init command ( just click on it )
+
+We need to copy configuration files to home directory and change ownership.
+
+Run sudo cp command.
+
+Continue
+
+Step 2: Deploy Container networking Interface
+Run the three commands
+cat  , kubectl  apply, kubectl  get pod
+
+Continue
+
+Step 3:  
+Run
+kubeadm  token list
+
+kubeadm join   ( this will create slave )
+
+Continue
+Step 4: 
+Run
+kbectl  get nodes
+You can see one controlplane and one node
+
+We have one more site
+https://labs.play-with-k8s.com/
+
+using which we can practice  Kubernetes.
+
+But, both the options will be slow.
+
+++++++++++++++++++++++++++++++++
+We learn kuberntes on GCP, as AWS is expensive.
+
+Sign up to GCP account using gmail credentials. ( Free trial comes with USD 300 )
+
+https://cloud.google.com/
+Sign in using gmail
+
+Click on console
+You will enter into google cloud platform console
+Navigation Menu --- Kubernetes Engine --  Clusters -- Create cluster --  Create
+
+Observation: Cluster size is 3
+By default, it creates 3 node cluster.
+
+
+Master Machine is not provided as alinux server.
+It is given as a service.
+As it is a service, it never fail.
+So, we do not need to worry about master.
+
+To connect to the cluster
+-------------------------------
+In GCP, Cloud Shell is the terminal, used to connect to the cluster.
+
+kubectl get nodes    ( we can see the nodes )
+docker --version     ( to see the version of the container )
+
+After practice,  Delete the cluster.
+Next day,  we can create the cluster again.
+-----------------------
+
+To Create pod 
+kubectl run --image tomcat webserver
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Kubadm  --  This is an application that is responsible for creating master node. It also stores information about the slaves.
+
+Kubeapi --  This is an application that runs on salves, and accepts the instructions from kubeadm and executes them on slaves.
+
+kubectl -- This is an application that triggers the kubernetes commands
+
+Kuberntes uses various types of objects.
+
+1 Pod:  This is a layer of abstraction on top of a container. This is the smallest object that kubernetes can work on. In the pod, we have the container. kubectl commands will work on the pod and pod communicates there instructions to the container.
+
+2. Service Object: This is used for port mapping and network load balancing.
+
+3. NameSpace: This is used for creating partitions in the cluster. Pods running in  a namespace cannot communicate with other pods running in other namespace.
+
+4. Secrets: This is used for passing encrypted data to the pods.
+
+5. ReplicaSet: This is used for managing multiple replicas of a pod to perform activities like load balancing and autoscaling.
+
+6. Deployment: This is used for performing all activites that a ReplicaSet can do. It can also handle rollling updates.
+
+Create Cluster.
+Open cloud shell terminal.
+
+Command to create a pod
+-----------------------------
+
+kubectl run --image tomcat webserver
+( Webserver is pod name )
+
+To see list of pods
+------------------------
+kubectl get pods
+
+If we do not specify replicas, it creates only one replica.
+
+To delete the pod
+--------------------
+kubectl delete pods webserver
+
+
+Lets create pod again
+-----------------------
+kubectl run --image tomcat webserver
+
+To know on which node, this pod is running
+
+
+
+
+kubectl get pods -o wide
+( o - stands for output )
+
+-------------------------
+But, Kubernetes performs container orchestration by using definition files. Definition files are yml files 
+
+Definition file, will have 4 top level elements
+
+1. apiVersion:
+2. kind:
+3. metadata:
+4. spec: 
+
+
+
+apiVersion:
+---------------
+Depending on kubernetes object we want to create, there is corresponding code library we want to use.
+
+apiVersion referes to code library
+
+Kind     apiVersion
+========================
+Pod       	v1
+Service   	v1
+NameSpace     	v1
+Secrets         v1
+RepliaSet       apps/v1
+Deployment      apps/v1
+
+
+
+
+
+kind:
+----------
+Refers to kubernetes object which we want to create.
+Ex: Pod, Replicaset, service etc
+
+metadata:
+-----------
+Additional information about the kubernets object
+like name, labels  etc
+
+spec:
+------
+Contains docker container related information like image name, environment variables, port mapping etc.
+
+
++++++++++++++++++++++++++++++++++++++++++
+
+Connect to cluster by using cloud shell.
+
+$ mkdir samplefiles
+$ cd samplefiles
+
+
+
+
+Ex1:  Create a pod definition file to start nginx in a pod. Name the pod as nginx-pod, name the container as appserver. 
+
+
+
+
+vim pod-definition1.yml
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: nginx-pod
+ labels:
+  author: sunil
+  type: reverse-proxy
+spec:
+ containers: 
+  - name: appserver
+    image: nginx
+
+
+:wq
+
+
+Command to run the definition file
+------------------------------------------
+kubectl create -f pod-definition1.yml
+
+Pod is created.
+
+To get the list of pods
+---------------------------
+kubectl get pods
+
+
+To get the list of pods along with IP address  and which node the pod is running
+---------------------------
+kubectl get pods -o wide  
+
+
+To delete the pod created from the above file
+---------------------
+kubectl delete -f  pod-definition1.yml
+
